@@ -1,0 +1,33 @@
+// c2o
+// @syntax gas
+// @file src/strlen.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.data
+.section .rodata
+.bss
+.text
+		.global u64_strlen_charP8
+	u64_strlen_charP8:
+	mov $0, %rax
+	# 
+	u64_strlen_charP8.while0.reentry:
+	cmpb $0,(%rdi,%rax)
+	jne u64_strlen_charP8.boolRetConditional0
+	clc
+	u64_strlen_charP8.boolRetConditional0.reentry:
+	jc u64_strlen_charP8.while0
+	# 
+		u64_strlen_charP8.epilogue:
+		ret
+	u64_strlen_charP8.boolRetConditional0:
+		stc
+		jmp u64_strlen_charP8.boolRetConditional0.reentry
+	u64_strlen_charP8.while0:
+		inc %rax
+		jmp u64_strlen_charP8.while0.reentry
+

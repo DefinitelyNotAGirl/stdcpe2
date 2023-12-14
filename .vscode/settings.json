@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "*.s": "asm-intel-x86-generic",
+        "*.s": "gas",
         "*.x86": "asm-intel-x86-generic",
         "*.make": "makefile",
         "STI": "c",
@@ -235,5 +235,6 @@
     "makefile.configurations":[
     ],
     "liveServer.settings.multiRootWorkspaceName": "c+=2",
-    "editor.trimAutoWhitespace": false
+    "editor.trimAutoWhitespace": false,
+    "workbench.colorTheme": "Bearded Theme Vivid Black"
 }

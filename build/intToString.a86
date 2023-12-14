@@ -1,0 +1,13 @@
+// c2o
+// @syntax gas
+// @file src/intToString.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.data
+.section .rodata
+.bss
+.text

@@ -1,0 +1,135 @@
+/*
+ * Created Date: Wednesday October 4th 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Wednesday October 4th 2023 3:01:25 am
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+#include <out>
+#include <cstring>
+
+@desc write informational output to this stream
+stream info    = 0x1001;
+@desc write warnings to this stream
+stream warning = 0x1002;
+@desc write errors to this stream
+stream error   = 0x1003;
+
+@desc the id of the stream that was last written to
+stream lastWrittenStream = 0x0000;
+
+char* shellcolor_error = `\1b[31m`;
+char* shellcolor_warning = `\1b[34m`;
+char* shellcolor_info = `\1b[35m`;
+char* shellcolor_reset = `\1b[0m`;
+
+@desc prefix used by stream info, feel free to modify this variable
+char* outPREFIX_INFO = `[INFO]`;
+@desc prefix used by stream warning, feel free to modify this variable
+char* outPREFIX_WARNING = `[WARNING]`;
+@desc prefix used by stream error, feel free to modify this variable
+char* outPREFIX_ERROR = `[ERROR]`;
+
+@desc prints prefixes like [INFO] and [ERROR]
+@param __stream the stream for which to print the prefix
+@return returns zero on success and non-zero on error
+nodoc u64 printStreamPrefix(stream __stream):
+    if(lastWrittenStream == __stream):
+        return 0x00;
+    char* shc = nullptr;
+    char* shp = nullptr;
+    if(__stream == info):
+        shc = shellcolor_info;
+        shp = outPREFIX_INFO;
+    else if(__stream == warning):
+        shc = shellcolor_warning;
+        shp = outPREFIX_WARNING;
+    else if(__stream == error):
+        shc = shellcolor_error;
+        shp = outPREFIX_ERROR;
+    else:
+        exit(0x1);
+    out << shc;
+    out << shp;
+    out << shellcolor_reset;
+    lastWrittenStream = __stream;
+    return 0x00;
+
+@desc print a null-terminated string
+@return returns __stream
+nodoc stream operator<<(stream __stream,char* str):
+    printStreamPrefix(__stream);
+    if(__stream == info):
+        out << str;
+    else if(__stream == warning):
+        out << str;
+    else if(__stream == error):
+        err << str;
+    return __stream;
+
+@desc print a single character
+@return returns __stream
+nodoc stream operator<<(stream __stream,char c):
+    //check for line feed
+    if(0xA == c):
+        lastWrittenStream = 0x0000;
+    else:
+        printStreamPrefix(__stream);
+    if(__stream == info):
+        out << c;
+    else if(__stream == warning):
+        out << c;
+    else if(__stream == error):
+        err << c;
+    return __stream;
+
+@desc set the current format for the stream
+@return returns __stream
+nodoc stream operator<<(stream __stream,format f):
+    printStreamPrefix(__stream);
+    if(__stream == info):
+        out << f;
+    else if(__stream == warning):
+        out << f;
+    else if(__stream == error):
+        err << f;
+    return __stream;
+
+@desc print number to stream
+@return returns __stream
+nodoc stream operator<<(stream __stream,u64 n):
+    char* nstr = UTHS(n);
+    __stream << nstr;
+    return __stream;
+
+@desc print pointer to stream as hexadecimal, includes 0x prefix
+@return returns __stream
+nodoc stream operator<<(stream __stream,ptr_t ptr):
+    u64 addr = ptr;
+    char* nstr = UTHS(addr);
+    __stream << hex;
+    __stream << nstr;
+    return __stream;

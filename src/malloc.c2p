@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Wednesday October 11th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Wednesday October 11th 2023 6:12:02 pm
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+#include <stdlitop>
+#include <Memory>
+#include <io>
+
+local __defptr __malloc_ptr = nullptr;
+local u64 __malloc_size = NULL;
+local u64 __malloc_free = NULL;
+local u64 __malloc_pageSize = NULL;
+local u32 __malloc_magic = 0x11511337;
+
+SYMBOL-cpe2mallocInit u64 mallocInit():
+    __malloc_pageSize = 4KiB;
+    //__malloc_magic = 0x11511337;
+    return 0;
+
+void __kalloc(u64 size):
+    return 0;
+
+__defptr malloc(u64 size):
+    size+=8;//malloc header size
+    if(size > __malloc_free):
+        u64 allocSize;
+        allocSize = __malloc_pageSize;
+        while(size > allocSize):
+            allocSize += __malloc_pageSize;
+        __kalloc(allocSize);
+    u32* mblock;
+    mblock = __malloc_ptr;
+    mblock[0] = size;
+    mblock[1] = __malloc_magic;
+    __defptr rval;
+    rval = __malloc_ptr + 0x8;
+    __malloc_ptr += size;
+    return rval;
+
+u64 free(__defptr ptr):
+    u32* mblock;
+    mblock = ptr;//set mblock to begining of header
+    mblock -= 0x8;
+    if(mblock[1] != __malloc_magic):
+        out << "free invalid magic value in memory block\n";
+    return 0;//this works for now, dont question it

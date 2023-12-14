@@ -1,0 +1,205 @@
+/*
+ * Created Date: Sunday October 15th 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Sunday October 15th 2023 4:37:44 am
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+.include "src/malloc_const.a86h"
+
+.extern cpe2malloc_dumpBlock
+
+.bss
+malloc_fakeheap:
+    .space 4096
+
+.data
+#header:
+#   u64 addr (address of corresponding block object)
+#   u32 magic
+#block:
+#   (+0) u64 size
+#       only bits 0-47 are size bits
+#       bits 48-55 are index into block list
+#       flags:
+#           56: reserved, MBZ
+#           57: reserved, MBZ
+#           58: reserved, MBZ
+#           59: is shared
+#           60: INB
+#           61: is in bss segment, if set, block is located in bss segment, if clear block is located on heap
+#           62: is multiblock
+#           63: is free
+#   (+8) u64 address
+.global malloc_btp
+.align 0x10
+malloc_btp:
+    .quad 4096 | __flagfree  | __flagbss #size: 4096, status: free, loc: bss
+    .quad malloc_fakeheap
+    .space 4080
+.global malloc_pageSize
+malloc_pageSize:
+    .quad 4096 #size of memory pages on the local system (just set to 4KiB for now)
+.global malloc_magic
+malloc_magic:
+    .int 0x11511337 #magic number to mark memory blocks
+.global malloc_used
+malloc_used:
+    .quad 0
+.global malloc_total
+malloc_total:
+    .quad 4096
+
+.text
+.global cpe2malloc_getTotalSize
+cpe2malloc_getTotalSize:
+    mov malloc_total, %rax
+    ret
+
+.global cpe2malloc_getUsed
+cpe2malloc_getUsed:
+    mov malloc_used, %rax
+    ret
+
+.global cpe2malloc_getFree
+cpe2malloc_getFree:
+    mov malloc_total, %rax
+    sub malloc_used, %rax
+    ret
+
+.global cpe2mallocInit
+cpe2mallocInit:
+    ret
+
+# treats as: ABI-SystemVamd64 u64 malloc(u64 bytes)
+.global cpe2malloc
+# @c2o
+# @function
+# args:
+# @return
+cpe2malloc:
+    #rdi: u64 bytes
+    #stack size required: 0
+    cpe2malloc.prolouge:
+    cpe2malloc.body:
+        add $__headersize, %rdi # add 12 bytes to the size for block information (magic & addr)
+        cpe2malloc.sizecheck:
+            test %rdi, %rdi         #make sure size isnt 0
+            jz cpe2malloc.epilouge
+            mov $__flagcheck, %r9
+            test %r9, %rdi  #make sure size isnt greater than 2^48 (281.5TB)
+            jnz cpe2malloc.supersize
+        mov $malloc_btp, %rsi
+        jmp cpe2malloc.searchBlocks
+        cpe2malloc.searchBlocks.reentry:
+        # rsi is now loaded with either 0 if no blocks were found 
+        # or with the address of the block object
+        test %rsi, %rsi
+        cmovz %rsi, %rax        # 0, return nullptr
+        jz cpe2malloc.epilouge
+        #not zero, add block information
+        cpe2malloc.debug1:
+            mov $__flagzero, %rax
+            mov 0(%rsi), %rdi # rdi: block->size
+            and %rax, %rdi
+            add %rdi, malloc_used
+        mov 8(%rsi), %rax
+        mov malloc_magic, %edi
+        mov %edi, 8(%rax)
+        mov %rsi, (%rax)
+        add $__headersize, %rax #move %rax to start of data area
+    cpe2malloc.epilouge:
+        ret
+    #logical blocks
+    cpe2malloc.getNewListBlock:
+        #rdi is loaded with size
+        #rsi is loaded with [254]
+        movq $0, 16(%rsi)# size of [255]
+        # load r8 with address of empty 4096 byte block
+        mov %r8, 24(%rsi)# addr of [255]
+        mov (%rsi), %rax
+        mov %rax, (%r8)
+        mov 8(%rsi), %rax
+        mov %rax, 8(%r8)
+        sub %rdi, (%r8)
+        add %rdi, 8(%r8)
+        jmp cpe2malloc.getNewListBlock.reentry
+    cpe2malloc.supersize:
+        #bytes > 2^48 (281.5TB), must allocate multiple logical blocks
+        xor %rax, %rax
+        jmp cpe2malloc.epilouge
+    cpe2malloc.searchBlocks.OOF:
+        # out of memory, must get more from kernel
+        jmp cpe2malloc.epilouge
+    cpe2malloc.searchBlocks.EOL:
+        mov 8(%rsi), %rsi
+        test %rsi, %rsi
+        jz cpe2malloc.searchBlocks.OOF
+        jmp cpe2malloc.searchBlocks
+    cpe2malloc.searchBlocks.nf:
+    cpe2malloc.searchBlocks.nrz:
+        add $16, %rsi
+    cpe2malloc.searchBlocks:
+        //check if block is actually a block
+        mov (%rsi), %r8
+        test %r8, %r8
+        jz cpe2malloc.searchBlocks.EOL
+        //check if block fits size
+        mov $__flagzero, %r9
+        mov (%rsi), %r8
+        and %r9, %r8
+        cmp %rdi, %r8
+        jl cpe2malloc.searchBlocks.nrz
+        //check if block is free
+        mov $__flagfree, %r9
+        test %r9, (%rsi)
+        jz cpe2malloc.searchBlocks.nf # block is not free
+        #(%rsi) >= %rdi (size of block is greater than or equal to size)
+        je cpe2malloc.searchBlocks.split
+        #must split block
+        cmpb $254, 6(%rsi)
+        je cpe2malloc.getNewListBlock
+        mov %rsi, %r8
+        add $16, %r8
+        mov (%rsi), %rax
+        mov %rax, (%r8)
+        mov 8(%rsi), %rax
+        mov %rax, 8(%r8)
+        incb 6(%r8)
+        //set size on [n]
+        mov %rdi, %r10
+        mov $__flagcheck, %r9
+        and %r9, %r10 # %r10 is now only flags
+        mov %rdi, (%rsi) # mov size
+        or %r10, (%rsi)  # mov flags
+        //set size on [n+1]
+        sub %rdi, (%r8)
+        add %rdi, 8(%r8)
+        cpe2malloc.getNewListBlock.reentry:
+        cpe2malloc.searchBlocks.split:
+        mov $__flagfree_and, %r9
+        and %r9, (%rsi) # mark block not free
+        jmp cpe2malloc.searchBlocks.reentry

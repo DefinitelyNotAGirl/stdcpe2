@@ -1,0 +1,91 @@
+/*
+ * Created Date: Sunday October 15th 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Sunday October 15th 2023 8:50:12 am
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+.include "src/malloc_const.a86h"
+.extern malloc_btp
+.extern malloc_pageSize
+.extern malloc_magic
+.extern malloc_used
+.extern malloc_total
+
+.extern cpe2malloc_dumpBlock
+
+.extern __fd_operatorLESSERLESSER___fd_charP8
+.extern __fd_operatorLESSERLESSER___fd_char
+.extern __fd_operatorLESSERLESSER___fd_u64
+
+.extern __fd_err
+
+.set printSTR, __fd_operatorLESSERLESSER___fd_charP8
+.set printCHAR, __fd_operatorLESSERLESSER___fd_char
+.set printHEX, __fd_operatorLESSERLESSER___fd_u64
+.set UTHS, charP8_UTHS_u64
+
+.data
+malloc_invalid_magic:
+    .string "free: invalid magic in memory block at address "
+
+.text
+# treats as: ABI-SystemVamd64 void free(u64 ptr)
+.global cpe2free
+cpe2free:
+    #rdi: ptr
+    #stack size required: 0
+    cpe2free.prolouge:
+    cpe2free.body:
+        sub $__headersize, %rdi # set %rdi to be the start of the header
+        mov malloc_magic, %esi # load %rsi with magic
+        cmp %esi, 8(%rdi)
+        jne cpe2free.invalidMagic
+        # valid magic
+        mov (%rdi), %rsi # load %rsi with address of block object
+        mov $__flagfree, %rax
+        or %rax, (%rsi) # mark block as free
+        cpe2free.debug1:
+            mov $__flagzero, %rax
+            mov (%rsi), %rdi # rdi: block->size
+            and %rax, %rdi
+            sub %rdi, malloc_used
+        call cpe2malloc_dumpBlock
+        xor %rax, %rax
+    cpe2free.epilouge:
+        ret
+    cpe2free.invalidMagic:
+        push %rdi
+        mov __fd_err, %rdi
+        mov $malloc_invalid_magic, %rsi
+        call printSTR
+        mov __fd_err, %rdi
+        pop %rsi
+        call printHEX
+        mov __fd_err, %rdi
+        mov $10, %rsi
+        call printCHAR
+        jmp cpe2free.epilouge

@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Monday October 2nd 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Monday October 2nd 2023 11:10:22 pm
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+char* cpuVendor = "____________";//blank value

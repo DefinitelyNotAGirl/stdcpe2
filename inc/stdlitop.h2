@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Friday October 13th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Friday October 13th 2023 9:05:19 am
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+litop PiB mul 1024*1024*1024*1024*1024;
+litop TiB mul 1024*1024*1024*1024;
+litop GiB mul 1024*1024*1024;
+litop MiB mul 1024*1024;
+litop KiB mul 1024;
+
+litop T mul 1000000000000;
+litop G mul 1000000000;
+litop M mul 1000000;
+litop K mul 1000;

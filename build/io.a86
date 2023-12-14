@@ -1,0 +1,150 @@
+// c2o
+// @syntax gas
+// @file src/io.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.extern global.std.__fd_cout
+.extern global.std.__fd_out
+.extern global.std.__fd_cerr
+.extern global.std.__fd_err
+.extern global.std.format_num
+.extern global.std.format_dec
+.extern global.std.format_hex
+.extern global.std.format_bin
+.extern global.std.format_oct
+.global __fd_cout
+.global __fd_out
+.global __fd_cerr
+.global __fd_err
+.global format_num
+.global format_dec
+.global format_hex
+.global format_bin
+.global format_oct
+.global char_endl
+.global format_numberFormat
+.data
+__fd_cout:
+	.quad 1
+__fd_out:
+	.quad 1
+__fd_cerr:
+	.quad 2
+__fd_err:
+	.quad 2
+format_num:
+	.quad 257
+format_dec:
+	.quad 257
+format_hex:
+	.quad 258
+format_bin:
+	.quad 259
+format_oct:
+	.quad 260
+char_endl:
+	.byte 10
+format_numberFormat:
+	.quad 257
+.section .rodata
+.bss
+.text
+	.global __fd_operatorLESSERLESSER___fd_charP8
+__fd_operatorLESSERLESSER___fd_charP8:
+	sub $32, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %rsi, %rdi
+	call u64_strlen_charP8
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rax, %r8
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %r8, %rdx
+	call global.std.u64_write___fd_charP8_u64
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rdi, %rax
+	jmp __fd_operatorLESSERLESSER___fd_charP8.epilogue
+	__fd_operatorLESSERLESSER___fd_charP8.epilogue:
+	add $32, %rsp
+	ret
+
+	.global __fd_operatorLESSERLESSER___fd_char
+__fd_operatorLESSERLESSER___fd_char:
+	sub $32, %rsp
+	mov $0, %r8
+	add %rsp, %r8
+	mov %sil, 0(%r8)
+	mov %rdi, 1(%rsp)
+	mov %rsi, 9(%rsp)
+	mov %r8, 17(%rsp)
+	mov %r8, %rsi
+	mov $1, %rdx
+	call global.std.u64_write___fd_charP8_u64
+	mov 1(%rsp), %rdi
+	mov 9(%rsp), %rsi
+	mov 17(%rsp), %r8
+	mov %rdi, %rax
+	jmp __fd_operatorLESSERLESSER___fd_char.epilogue
+	__fd_operatorLESSERLESSER___fd_char.epilogue:
+	add $32, %rsp
+	ret
+
+	.global __fd_operatorLESSERLESSER___fd_format
+__fd_operatorLESSERLESSER___fd_format:
+	mov %rsi, format_numberFormat
+	mov %rdi, %rax
+	jmp __fd_operatorLESSERLESSER___fd_format.epilogue
+	__fd_operatorLESSERLESSER___fd_format.epilogue:
+	ret
+
+	.global __fd_operatorLESSERLESSER___fd_u64
+__fd_operatorLESSERLESSER___fd_u64:
+	sub $32, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %rsi, %rdi
+	call charP8_UTHS_u64
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rax, %r8
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %r9, 24(%rsp)
+	mov %r8, %rdi
+	call u64_strlen_charP8
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov 24(%rsp), %r9
+	mov %rax, %r9
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %r9, 24(%rsp)
+	mov %r8, %rsi
+	mov %r9, %rdx
+	call global.std.u64_write___fd_charP8_u64
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov 24(%rsp), %r9
+	mov %rdi, %rax
+	jmp __fd_operatorLESSERLESSER___fd_u64.epilogue
+	__fd_operatorLESSERLESSER___fd_u64.epilogue:
+	add $32, %rsp
+	ret
+

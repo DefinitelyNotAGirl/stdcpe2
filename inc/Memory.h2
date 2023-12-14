@@ -32,30 +32,30 @@
 /**
     @desc allocates itemCount*size bytes of memory, initializes the memory to 0 and returns the address
 */
-void* calloc(u64 itemCount, u64 size);
+__defptr calloc(u64 itemCount, u64 size);
 
 /**
     @desc allocates size bytes of memory, zeros out the allocated space and returns the address
 */
-void* zalloc(u64 size);
+__defptr zalloc(u64 size);
 
 /**
     @desc allocates size bytes of memory and returns the address
 */
-void* malloc(u64 size);
+SYMBOL-cpe2malloc __defptr malloc(u64 size);
 
 /**
     @desc free's the memory at the address ptr
 */
-void free(void* ptr);
+SYMBOL-cpe2free void free(__defptr ptr);
 
 /**
-    @desc same as "void* newBuffer = malloc(newSize);memcpy(newBuffer,ptr,oldSize);", newBuffer may or may not be the same as ptr,
+    @desc same as "u64 newBuffer = malloc(newSize);memcpy(newBuffer,ptr,oldSize);", newBuffer may or may not be the same as ptr,
     if realloc moves the buffer it will automatically free the old buffer
 */
-void* realloc(void* ptr, u64 newSize);
+__defptr realloc(__defptr ptr, u64 newSize);
 
 /**
     @desc copies size number of bytes from src to dst
 */
-void memcpy(void* dst, void* src, u64 size);
+void memcpy(__defptr dst, __defptr src, u64 size);

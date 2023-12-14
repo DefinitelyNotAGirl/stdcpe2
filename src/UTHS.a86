@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Sunday October 15th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Sunday October 15th 2023 1:42:24 pm
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+.extern __cpe2_chstrl
+.extern cpe2malloc
+
+.global charP8_UTHS_u64
+charP8_UTHS_u64:
+    //rdi: u64 n
+    charP8_UTHS_u64.prolouge:
+        sub $16, %rsp
+        mov %rdi, (%rsp)
+    charP8_UTHS_u64.body:
+        //aquire memory
+        call __cpe2_chstrl
+        add $3, %rax
+        mov %rax, 8(%rsp)
+        mov %rax, %rdi
+        call cpe2malloc
+        //fill buffer
+        mov (%rsp), %rdi
+        mov 8(%rsp), %rsi
+        dec %rsi
+        movb $'0',  (%rax)
+        movb $'x', 1(%rax)
+        movb $0x00, (%rax,%rsi)
+        dec %rsi
+        .L1:
+            test %rdi, %rdi
+            jz charP8_UTHS_u64.epilouge
+        .L2:
+            mov %rdi, %rdx
+            and $0xF, %rdx
+            cmp $0xA, %rdx
+            jl .L4
+            add $0x27, %rdx
+            .L4:
+            add $0x30, %rdx
+            mov %dl, (%rax,%rsi)
+            dec %rsi
+            shr $4, %rdi
+            jmp .L1
+    charP8_UTHS_u64.epilouge:
+        add $16, %rsp
+        ret

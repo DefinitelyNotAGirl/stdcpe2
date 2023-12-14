@@ -1,0 +1,36 @@
+// c2o
+// @syntax gas
+// @file src/syscall.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.extern global.std.__fd_cout
+.extern global.std.__fd_out
+.extern global.std.__fd_cerr
+.extern global.std.__fd_err
+.extern global.std.format_num
+.extern global.std.format_dec
+.extern global.std.format_hex
+.extern global.std.format_bin
+.extern global.std.format_oct
+.data
+.section .rodata
+.bss
+.text
+	.global u64_write___fd_u64_u64
+u64_write___fd_u64_u64:
+	mov $1, %rax
+	syscall
+	u64_write___fd_u64_u64.epilogue:
+	ret
+
+	.global u64_write___fd_charP8_u64
+u64_write___fd_charP8_u64:
+	mov $1, %rax
+	syscall
+	u64_write___fd_charP8_u64.epilogue:
+	ret
+

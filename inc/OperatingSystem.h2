@@ -29,3 +29,5 @@
  */
  
 #pragma once
+
+#pragma ABI SystemVamd64

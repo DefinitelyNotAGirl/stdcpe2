@@ -1,12 +1,12 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Wednesday October 4th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Wednesday October 4th 2023 2:57:00 am
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -14,10 +14,10 @@
  * modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,8 +29,31 @@
  */
 #pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+#include <io>
+
+nodoc export class stream extends primitive64;
+
+nodoc primitiveAssign primitiveInPlace void operator=(stream,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(stream,stream);
+
+nodoc primitiveEqual bool operator==(stream,stream);
+nodoc primitiveNotEqual bool operator!=(stream,stream);
+
+extern stream info;
+extern stream error;
+extern stream warning;
+
+nodoc stream operator<<(stream __stream,char* str);
+nodoc stream operator<<(stream __stream,char c);
+nodoc stream operator<<(stream __stream,u64 n);
+nodoc stream operator<<(stream __stream,i64 n);
+nodoc stream operator<<(stream __stream,u32 n);
+nodoc stream operator<<(stream __stream,i32 n);
+nodoc stream operator<<(stream __stream,u16 n);
+nodoc stream operator<<(stream __stream,i16 n);
+nodoc stream operator<<(stream __stream,u8 n);
+nodoc stream operator<<(stream __stream,i8 n);
+nodoc stream operator<<(stream __stream,f64 n);
+nodoc stream operator<<(stream __stream,f32 n);
+nodoc stream operator<<(stream __stream,format f);
+nodoc stream operator<<(stream __stream,__defptr ptr);

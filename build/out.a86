@@ -1,0 +1,422 @@
+// c2o
+// @syntax gas
+// @file src/out.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.extern global.std.__fd_cout
+.extern global.std.__fd_out
+.extern global.std.__fd_cerr
+.extern global.std.__fd_err
+.extern global.std.format_num
+.extern global.std.format_dec
+.extern global.std.format_hex
+.extern global.std.format_bin
+.extern global.std.format_oct
+.extern stream_info
+.extern stream_error
+.extern stream_warning
+.global stream_info
+.global stream_warning
+.global stream_error
+.global stream_lastWrittenStream
+.global charP8_shellcolor_error
+.global charP8_shellcolor_warning
+.global charP8_shellcolor_info
+.global charP8_shellcolor_reset
+.global charP8_outPREFIX_INFO
+.global charP8_outPREFIX_WARNING
+.global charP8_outPREFIX_ERROR
+.data
+stream_info:
+	.quad 4097
+stream_warning:
+	.quad 4098
+stream_error:
+	.quad 4099
+stream_lastWrittenStream:
+	.quad 0
+local.src_out.c2.unnamed371:
+	.byte 27
+	.byte 91
+	.byte 51
+	.byte 49
+	.byte 109
+	.byte 0
+charP8_shellcolor_error:
+	.quad local.src_out.c2.unnamed371
+local.src_out.c2.unnamed372:
+	.byte 27
+	.byte 91
+	.byte 51
+	.byte 52
+	.byte 109
+	.byte 0
+charP8_shellcolor_warning:
+	.quad local.src_out.c2.unnamed372
+local.src_out.c2.unnamed373:
+	.byte 27
+	.byte 91
+	.byte 51
+	.byte 53
+	.byte 109
+	.byte 0
+charP8_shellcolor_info:
+	.quad local.src_out.c2.unnamed373
+local.src_out.c2.unnamed374:
+	.byte 27
+	.byte 91
+	.byte 48
+	.byte 109
+	.byte 0
+charP8_shellcolor_reset:
+	.quad local.src_out.c2.unnamed374
+local.src_out.c2.unnamed375:
+	.byte 91
+	.byte 73
+	.byte 78
+	.byte 70
+	.byte 79
+	.byte 93
+	.byte 0
+charP8_outPREFIX_INFO:
+	.quad local.src_out.c2.unnamed375
+local.src_out.c2.unnamed376:
+	.byte 91
+	.byte 87
+	.byte 65
+	.byte 82
+	.byte 78
+	.byte 73
+	.byte 78
+	.byte 71
+	.byte 93
+	.byte 0
+charP8_outPREFIX_WARNING:
+	.quad local.src_out.c2.unnamed376
+local.src_out.c2.unnamed377:
+	.byte 91
+	.byte 69
+	.byte 82
+	.byte 82
+	.byte 79
+	.byte 82
+	.byte 93
+	.byte 0
+charP8_outPREFIX_ERROR:
+	.quad local.src_out.c2.unnamed377
+.section .rodata
+.bss
+.text
+	.global u64_printStreamPrefix_stream
+u64_printStreamPrefix_stream:
+	sub $64, %rsp
+	mov %rbx, 56(%rsp)
+	# 
+	cmp %rdi,stream_lastWrittenStream
+	je u64_printStreamPrefix_stream.boolRetConditional0
+	clc
+	u64_printStreamPrefix_stream.boolRetConditional0.reentry:
+	jc u64_printStreamPrefix_stream.if0
+	# 
+	u64_printStreamPrefix_stream.conditional1.reentry:
+	# 
+	cmp stream_info,%rdi
+	je u64_printStreamPrefix_stream.boolRetConditional1
+	clc
+	u64_printStreamPrefix_stream.boolRetConditional1.reentry:
+	jc u64_printStreamPrefix_stream.if1
+	# 
+	# 
+	cmp stream_warning,%rdi
+	je u64_printStreamPrefix_stream.boolRetConditional2
+	clc
+	u64_printStreamPrefix_stream.boolRetConditional2.reentry:
+	jc u64_printStreamPrefix_stream.elseif0
+	# 
+	# 
+	cmp stream_error,%rdi
+	je u64_printStreamPrefix_stream.boolRetConditional3
+	clc
+	u64_printStreamPrefix_stream.boolRetConditional3.reentry:
+	jc u64_printStreamPrefix_stream.elseif1
+	# 
+	u64_printStreamPrefix_stream.else0:
+		mov %rbx, 0(%rsp)
+		mov %rsi, 8(%rsp)
+		mov %rdi, 16(%rsp)
+		mov %r8, 24(%rsp)
+		mov %r9, 32(%rsp)
+		mov %r10, 40(%rsp)
+		mov %r11, 48(%rsp)
+		mov $1, %rdi
+		call cpe2exit
+		mov 0(%rsp), %rbx
+		mov 8(%rsp), %rsi
+		mov 16(%rsp), %rdi
+		mov 24(%rsp), %r8
+		mov 32(%rsp), %r9
+		mov 40(%rsp), %r10
+		mov 48(%rsp), %r11
+	u64_printStreamPrefix_stream.conditional2.reentry:
+	mov %rdi, stream_lastWrittenStream
+	mov $0, %rax
+	jmp u64_printStreamPrefix_stream.epilogue
+	u64_printStreamPrefix_stream.epilogue:
+	mov 56(%rsp), %rbx
+	add $64, %rsp
+	ret
+	u64_printStreamPrefix_stream.boolRetConditional0:
+		stc
+		jmp u64_printStreamPrefix_stream.boolRetConditional0.reentry
+	u64_printStreamPrefix_stream.if0:
+		mov $0, %rax
+		jmp u64_printStreamPrefix_stream.epilogue
+		jmp u64_printStreamPrefix_stream.conditional1.reentry
+	u64_printStreamPrefix_stream.boolRetConditional1:
+		stc
+		jmp u64_printStreamPrefix_stream.boolRetConditional1.reentry
+	u64_printStreamPrefix_stream.if1:
+		mov charP8_shellcolor_info, %r8
+		mov charP8_outPREFIX_INFO, %r9
+		jmp u64_printStreamPrefix_stream.conditional2.reentry
+	u64_printStreamPrefix_stream.boolRetConditional2:
+		stc
+		jmp u64_printStreamPrefix_stream.boolRetConditional2.reentry
+	u64_printStreamPrefix_stream.elseif0:
+		mov charP8_shellcolor_warning, %r8
+		mov charP8_outPREFIX_WARNING, %r9
+		jmp u64_printStreamPrefix_stream.conditional2.reentry
+	u64_printStreamPrefix_stream.boolRetConditional3:
+		stc
+		jmp u64_printStreamPrefix_stream.boolRetConditional3.reentry
+	u64_printStreamPrefix_stream.elseif1:
+		mov charP8_shellcolor_error, %r8
+		mov charP8_outPREFIX_ERROR, %r9
+		jmp u64_printStreamPrefix_stream.conditional2.reentry
+
+	.global stream_operatorLESSERLESSER_stream_charP8
+stream_operatorLESSERLESSER_stream_charP8:
+	sub $16, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	call u64_printStreamPrefix_stream
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	# 
+	cmp stream_info,%rdi
+	je stream_operatorLESSERLESSER_stream_charP8.boolRetConditional0
+	clc
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional0.reentry:
+	jc stream_operatorLESSERLESSER_stream_charP8.if0
+	# 
+	# 
+	cmp stream_warning,%rdi
+	je stream_operatorLESSERLESSER_stream_charP8.boolRetConditional1
+	clc
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional1.reentry:
+	jc stream_operatorLESSERLESSER_stream_charP8.elseif0
+	# 
+	# 
+	cmp stream_error,%rdi
+	je stream_operatorLESSERLESSER_stream_charP8.boolRetConditional2
+	clc
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional2.reentry:
+	jc stream_operatorLESSERLESSER_stream_charP8.elseif1
+	# 
+	stream_operatorLESSERLESSER_stream_charP8.conditional1.reentry:
+	mov %rdi, %rax
+	jmp stream_operatorLESSERLESSER_stream_charP8.epilogue
+	stream_operatorLESSERLESSER_stream_charP8.epilogue:
+	add $16, %rsp
+	ret
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional0:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_charP8.boolRetConditional0.reentry
+	stream_operatorLESSERLESSER_stream_charP8.if0:
+		jmp stream_operatorLESSERLESSER_stream_charP8.conditional1.reentry
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional1:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_charP8.boolRetConditional1.reentry
+	stream_operatorLESSERLESSER_stream_charP8.elseif0:
+		jmp stream_operatorLESSERLESSER_stream_charP8.conditional1.reentry
+	stream_operatorLESSERLESSER_stream_charP8.boolRetConditional2:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_charP8.boolRetConditional2.reentry
+	stream_operatorLESSERLESSER_stream_charP8.elseif1:
+		jmp stream_operatorLESSERLESSER_stream_charP8.conditional1.reentry
+
+	.global stream_operatorLESSERLESSER_stream_char
+stream_operatorLESSERLESSER_stream_char:
+	sub $32, %rsp
+	# 
+	cmp $10,%rsi
+	je stream_operatorLESSERLESSER_stream_char.boolRetConditional0
+	clc
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional0.reentry:
+	jc stream_operatorLESSERLESSER_stream_char.if0
+	# 
+	stream_operatorLESSERLESSER_stream_char.else0:
+		mov %rdi, 0(%rsp)
+		mov %rsi, 8(%rsp)
+		mov %r8, 16(%rsp)
+		call u64_printStreamPrefix_stream
+		mov 0(%rsp), %rdi
+		mov 8(%rsp), %rsi
+		mov 16(%rsp), %r8
+	stream_operatorLESSERLESSER_stream_char.conditional1.reentry:
+	# 
+	cmp stream_info,%rdi
+	je stream_operatorLESSERLESSER_stream_char.boolRetConditional1
+	clc
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional1.reentry:
+	jc stream_operatorLESSERLESSER_stream_char.if1
+	# 
+	# 
+	cmp stream_warning,%rdi
+	je stream_operatorLESSERLESSER_stream_char.boolRetConditional2
+	clc
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional2.reentry:
+	jc stream_operatorLESSERLESSER_stream_char.elseif0
+	# 
+	# 
+	cmp stream_error,%rdi
+	je stream_operatorLESSERLESSER_stream_char.boolRetConditional3
+	clc
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional3.reentry:
+	jc stream_operatorLESSERLESSER_stream_char.elseif1
+	# 
+	stream_operatorLESSERLESSER_stream_char.conditional2.reentry:
+	mov %rdi, %rax
+	jmp stream_operatorLESSERLESSER_stream_char.epilogue
+	stream_operatorLESSERLESSER_stream_char.epilogue:
+	add $32, %rsp
+	ret
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional0:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_char.boolRetConditional0.reentry
+	stream_operatorLESSERLESSER_stream_char.if0:
+		movq $0, stream_lastWrittenStream
+		jmp stream_operatorLESSERLESSER_stream_char.conditional1.reentry
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional1:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_char.boolRetConditional1.reentry
+	stream_operatorLESSERLESSER_stream_char.if1:
+		jmp stream_operatorLESSERLESSER_stream_char.conditional2.reentry
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional2:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_char.boolRetConditional2.reentry
+	stream_operatorLESSERLESSER_stream_char.elseif0:
+		jmp stream_operatorLESSERLESSER_stream_char.conditional2.reentry
+	stream_operatorLESSERLESSER_stream_char.boolRetConditional3:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_char.boolRetConditional3.reentry
+	stream_operatorLESSERLESSER_stream_char.elseif1:
+		jmp stream_operatorLESSERLESSER_stream_char.conditional2.reentry
+
+	.global stream_operatorLESSERLESSER_stream_format
+stream_operatorLESSERLESSER_stream_format:
+	sub $16, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	call u64_printStreamPrefix_stream
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	# 
+	cmp stream_info,%rdi
+	je stream_operatorLESSERLESSER_stream_format.boolRetConditional0
+	clc
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional0.reentry:
+	jc stream_operatorLESSERLESSER_stream_format.if0
+	# 
+	# 
+	cmp stream_warning,%rdi
+	je stream_operatorLESSERLESSER_stream_format.boolRetConditional1
+	clc
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional1.reentry:
+	jc stream_operatorLESSERLESSER_stream_format.elseif0
+	# 
+	# 
+	cmp stream_error,%rdi
+	je stream_operatorLESSERLESSER_stream_format.boolRetConditional2
+	clc
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional2.reentry:
+	jc stream_operatorLESSERLESSER_stream_format.elseif1
+	# 
+	stream_operatorLESSERLESSER_stream_format.conditional1.reentry:
+	mov %rdi, %rax
+	jmp stream_operatorLESSERLESSER_stream_format.epilogue
+	stream_operatorLESSERLESSER_stream_format.epilogue:
+	add $16, %rsp
+	ret
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional0:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_format.boolRetConditional0.reentry
+	stream_operatorLESSERLESSER_stream_format.if0:
+		jmp stream_operatorLESSERLESSER_stream_format.conditional1.reentry
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional1:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_format.boolRetConditional1.reentry
+	stream_operatorLESSERLESSER_stream_format.elseif0:
+		jmp stream_operatorLESSERLESSER_stream_format.conditional1.reentry
+	stream_operatorLESSERLESSER_stream_format.boolRetConditional2:
+		stc
+		jmp stream_operatorLESSERLESSER_stream_format.boolRetConditional2.reentry
+	stream_operatorLESSERLESSER_stream_format.elseif1:
+		jmp stream_operatorLESSERLESSER_stream_format.conditional1.reentry
+
+	.global stream_operatorLESSERLESSER_stream_u64
+stream_operatorLESSERLESSER_stream_u64:
+	sub $32, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %rsi, %rdi
+	call charP8_UTHS_u64
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rax, %r8
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %r8, %rsi
+	call stream_operatorLESSERLESSER_stream_charP8
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rdi, %rax
+	jmp stream_operatorLESSERLESSER_stream_u64.epilogue
+	stream_operatorLESSERLESSER_stream_u64.epilogue:
+	add $32, %rsp
+	ret
+
+	.global stream_operatorLESSERLESSER_stream_ptr_t
+stream_operatorLESSERLESSER_stream_ptr_t:
+	sub $32, %rsp
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %rsi, %rdi
+	call charP8_UTHS_u64
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rax, %r8
+	mov %rdi, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %r8, 16(%rsp)
+	mov %r8, %rsi
+	call stream_operatorLESSERLESSER_stream_charP8
+	mov 0(%rsp), %rdi
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %r8
+	mov %rdi, %rax
+	jmp stream_operatorLESSERLESSER_stream_ptr_t.epilogue
+	stream_operatorLESSERLESSER_stream_ptr_t.epilogue:
+	add $32, %rsp
+	ret
+

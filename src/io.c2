@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Monday October 2nd 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Monday October 2nd 2023 5:39:07 am
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+#include <io>
+#include <cstring>
+
+//namespace std:
+//streams
+__fd cout = 0x1;
+__fd out = 0x1;
+__fd cerr = 0x2;
+__fd err = 0x2;
+//formats
+format num = 0x101;
+format dec = 0x101;
+format hex = 0x102;
+format bin = 0x103;
+format oct = 0x104;
+//special chars
+char endl = 0xA;//line feed
+
+//local variables
+format numberFormat = 0x101;
+
+__fd operator<<(__fd desc,char* str):
+    u64 len = strlen(str);
+    write(desc,str,len);
+    return desc;
+
+__fd operator<<(__fd desc,char c):
+    char[1] buff;
+    buff[0] = c;
+    write(desc,buff,0d1);
+    return desc;
+
+__fd operator<<(__fd desc,format f):
+    numberFormat = f;
+    return desc;
+
+__fd operator<<(__fd desc,u64 n):
+    (r8) char* nstr = UTHS(n);
+    u64 len = strlen(nstr);
+    write(desc,nstr,len);
+    (r8) ptr_t data;
+    return desc;

@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Wednesday October 11th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Wednesday October 11th 2023 6:19:15 pm
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+SYMBOL-__cpe2_chstrl nodoc u64 chstrl(u64 n);
+
+//nodoc char* UTHS(u64 n):
+//    u64 bsize;
+//    bsize = chstrl(n);
+//    bsize += 0d3;//terminating character and 0x prefix
+//    char* buff = malloc(bsize);
+//    return buff;

@@ -1,0 +1,76 @@
+transfer u64_printStreamPrefix_stream -> u64_printStreamPrefix_stream.if0
+parent stack offset: 0
+parent func stack offset: 0
+parent stack size: 0
+parent func stack size: 0
+condition: (
+well, ig im dumb LMFAO
+a: 5
+b: 1
+0 <= 0
+transfer u64_printStreamPrefix_stream -> u64_printStreamPrefix_stream.if1
+parent stack offset: 0
+parent func stack offset: 0
+parent stack size: 0
+parent func stack size: 0
+condition: (
+invalid operator: <<
+transfer u64_printStreamPrefix_stream -> u64_printStreamPrefix_stream.elseif0
+condition: (
+invalid operator: <<
+transfer u64_printStreamPrefix_stream -> u64_printStreamPrefix_stream.elseif1
+condition: (
+invalid operator: <<
+59 <= 59
+59 <= 59
+fname: printStreamPrefix
+arg: 
+##### variable #####
+addr: 0x555555714300
+name: __stream
+storage: 1
+auto storage: 0
+reg: rdi
+offset: 0
+offsetReg: invalid
+offsetType: 4
+imm val: 555555714360
+####################
+[37m[DEBUG][0m src/resolve.cxx:1030
+[37m[DEBUG][0m src/resolve.cxx:1032
+[37m[DEBUG][0m src/resolve.cxx:1034
+[37m[DEBUG][0m src/resolve.cxx:1037
+[37m[DEBUG][0m src/resolve.cxx:1039
+transfer stream_operatorLESSERLESSER_stream_charP8 -> stream_operatorLESSERLESSER_stream_charP8.if0
+parent stack offset: 0
+parent func stack offset: 0
+parent stack size: 16
+parent func stack size: 16
+condition: (
+transfer stream_operatorLESSERLESSER_stream_charP8 -> stream_operatorLESSERLESSER_stream_charP8.elseif0
+condition: (
+transfer stream_operatorLESSERLESSER_stream_charP8 -> stream_operatorLESSERLESSER_stream_charP8.elseif1
+condition: (
+transfer stream_operatorLESSERLESSER_stream_char -> stream_operatorLESSERLESSER_stream_char.if0
+parent stack offset: 0
+parent func stack offset: 0
+parent stack size: 0
+parent func stack size: 0
+condition: (
+0 <= 0
+fname: printStreamPrefix
+arg: 
+##### variable #####
+addr: 0x555555719220
+name: __stream
+storage: 1
+auto storage: 0
+reg: rdi
+offset: 0
+offsetReg: invalid
+offsetType: 4
+imm val: 12
+####################
+[37m[DEBUG][0m src/resolve.cxx:1030
+[37m[DEBUG][0m src/resolve.cxx:1032
+malloc(): invalid size (unsorted)

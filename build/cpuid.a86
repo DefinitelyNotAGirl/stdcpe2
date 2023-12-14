@@ -1,0 +1,30 @@
+// c2o
+// @syntax gas
+// @file src/cpuid.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.global charP8_cpuVendor
+.data
+local.src_cpuid.c2.unnamed355:
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 95
+	.byte 0
+charP8_cpuVendor:
+	.quad local.src_cpuid.c2.unnamed355
+.section .rodata
+.bss
+.text

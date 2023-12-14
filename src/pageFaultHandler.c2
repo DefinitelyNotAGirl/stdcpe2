@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Wednesday October 11th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Wednesday October 11th 2023 9:51:33 pm
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
+#include <io>
+#include <userspace>
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+class siginfo_t:
+    u32 signo;       /* Signal number */
+    u32 code;        /* Signal code */
+    u32 pid;         /* Sending process ID */
+    u32 uid;         /* Real user ID of sending process */
+    __defptr addr;   /* Address of faulting instruction, for page faults address accessed to cause fault */
+    u32 status;      /* Exit value or signal */
+
+void pageFaultHandler(u64 signo, u64 siginfo__, u64 ucontext):
+    (r8) siginfo_t* siginfo;
+    (r9) __defptr address;
+    (r10) u64 r10;
+    siginfo = siginfo__;
+    address = siginfo->addr;
+    out << "\n\1b[31m[SEGMENTATION FAULT]\1b[0m\n";
+    if(0x00 == address):
+        out << "\1b[31mNULL POINTER EXCEPTION\1b[0m\n";
+    out << "address = ";
+    r10 = address;
+    out << r10;
+    out << endl;
+    exit(signo);

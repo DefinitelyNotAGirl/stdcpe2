@@ -1,8 +1,8 @@
 /*
- * Created Date: Saturday September 2nd 2023
+ * Created Date: Sunday October 15th 2023
  * Author: Lilith
  * -----
- * Last Modified: Saturday September 2nd 2023 9:52:42 pm
+ * Last Modified: Sunday October 15th 2023 8:40:59 am
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
@@ -27,10 +27,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#pragma once
 
-nodoc mangling-c namespace c:
-    void* calloc(u64 itemCount, u64 size);
-    void* malloc(u64 size);
-    void free(void* ptr);
-    u64 strlen(char* str);
+//                   0x0807060504030201 (64-bit reference)
+.set __flagset,      0x8000FFFFFFFFFFFF
+.set __flagcheck,    0xFFFF000000000000
+.set __flagzero,     0x0000FFFFFFFFFFFF
+.set __flagshared,   0x0800000000000000
+.set __flaginb,      0x1000000000000000
+.set __flagmb,       0x4000000000000000
+.set __flagbss,      0x2000000000000000
+.set __flagfree,     0x8000000000000000
+.set __flagfree_and, 0x7FFFFFFFFFFFFFFF
+
+//misc constants
+.set __headersize,   12

@@ -1,0 +1,177 @@
+/*
+ * Created Date: Sunday October 15th 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Sunday October 15th 2023 2:29:22 pm
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+.include "src/malloc_const.a86h"
+.extern malloc_btp
+.extern malloc_pageSize
+.extern malloc_magic
+.extern cpe2free
+
+.extern __fd_operatorLESSERLESSER___fd_charP8
+.extern __fd_operatorLESSERLESSER___fd_char
+.extern __fd_operatorLESSERLESSER___fd_u64
+
+.extern __fd_out
+
+.set printSTR, __fd_operatorLESSERLESSER___fd_charP8
+.set printCHAR, __fd_operatorLESSERLESSER___fd_char
+.set printHEX, __fd_operatorLESSERLESSER___fd_u64
+.set UTHS, charP8_UTHS_u64
+
+.data
+malloc_debug_head:
+    .string "\n##### memory block #####\n"
+malloc_debug_free:
+    .string "\nstatus: free"
+malloc_debug_used:
+    .string "\nstatus: used"
+malloc_debug_size:
+    .string "size: "
+malloc_debug_address:
+    .string "\naddress: "
+malloc_debug_index:
+    .string "\nindex: "
+
+.text
+cpe2malloc_printblock:
+    // r15: block object address
+    cpe2malloc_printblock.prolouge:
+    cpe2malloc_printblock.body:
+        //initialise
+        xor %r14, %r14
+        xor %r13, %r13
+        mov $__flagzero, %rax
+        //
+        mov 8(%r15), %rbp # rbp: block->address
+        mov 7(%r15), %r14b # r14b: block->flags
+        mov 6(%r15), %r13b # r13b: block->index
+        mov 0(%r15), %rbx # rbx: block->size
+        and %rax, %rbx
+        //start printing
+        mov __fd_out, %rdi
+        mov $malloc_debug_head, %rsi
+        call printSTR
+        //print index
+        mov __fd_out, %rdi
+        mov $malloc_debug_size, %rsi
+        call printSTR
+        mov __fd_out, %rdi
+        mov %rbx, %rsi
+        call printHEX
+        //print index
+        mov __fd_out, %rdi
+        mov $malloc_debug_address, %rsi
+        call printSTR
+        mov __fd_out, %rdi
+        mov %rbp, %rsi
+        call printHEX
+        //print index
+        mov __fd_out, %rdi
+        mov $malloc_debug_index, %rsi
+        call printSTR
+        mov __fd_out, %rdi
+        mov %r13, %rsi
+        call printHEX
+        //print status
+        mov $malloc_debug_free, %rsi
+        test $0x80, %r14b
+        mov $malloc_debug_used, %rdi
+        cmovz %rdi, %rsi
+        mov __fd_out, %rdi
+        call printSTR
+        //end line
+        mov __fd_out, %rdi
+        mov $10, %rsi
+        call printCHAR
+    cpe2malloc_printblock.epilouge:
+        ret
+
+.global cpe2malloc_dumpBlock
+cpe2malloc_dumpBlock:
+    # rsi: block
+    cpe2malloc_dumpBlock.prolouge:
+        sub $64, %rsp
+        mov %r15,   (%rsp)
+        mov %r14,  8(%rsp)
+        mov %r13, 16(%rsp)
+        mov %r12, 24(%rsp)
+        mov %rbx, 32(%rsp)
+        mov %rbp, 40(%rsp)
+        mov %rdi, 48(%rsp)
+        mov %rsi, 56(%rsp)
+    cpe2malloc_dumpBlock.body:
+        mov %rsi, %r15
+        call cpe2malloc_printblock
+    cpe2malloc_dumpBlock.epilouge:
+        mov   (%rsp),   %r15
+        mov  8(%rsp),   %r14
+        mov 16(%rsp),   %r13
+        mov 24(%rsp),   %r12
+        mov 32(%rsp),   %rbx
+        mov 40(%rsp),   %rbp
+        mov 48(%rsp),   %rdi
+        mov 56(%rsp),   %rsi
+        add $64, %rsp
+        ret
+
+.global cpe2malloc_dump
+cpe2malloc_dump:
+    cpe2malloc_dump.prolouge:
+        sub $64, %rsp
+        mov %r15,   (%rsp)
+        mov %r14,  8(%rsp)
+        mov %r13, 16(%rsp)
+        mov %r12, 24(%rsp)
+        mov %rbx, 32(%rsp)
+        mov %rbp, 40(%rsp)
+        mov %rdi, 48(%rsp)
+        mov %rsi, 56(%rsp)
+    cpe2malloc_dump.body:
+        mov $malloc_btp, %r15
+        .L1:
+            test %r15, %r15
+            jz cpe2malloc_dump.epilouge
+            cmpq $0, 0(%r15)
+            cmovz 8(%r15), %r15
+            jz .L1
+            call cpe2malloc_printblock
+            add $16, %r15
+            jmp .L1
+    cpe2malloc_dump.epilouge:
+        mov   (%rsp),   %r15
+        mov  8(%rsp),   %r14
+        mov 16(%rsp),   %r13
+        mov 24(%rsp),   %r12
+        mov 32(%rsp),   %rbx
+        mov 40(%rsp),   %rbp
+        mov 48(%rsp),   %rdi
+        mov 56(%rsp),   %rsi
+        add $64, %rsp
+        ret

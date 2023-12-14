@@ -1,0 +1,129 @@
+/*
+ * Created Date: Sunday October 1st 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Sunday October 1st 2023 6:56:30 pm
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+#
+#
+# THIS ONLY WORKS FOR GNU-LINUX, MOST BE RE-IMPLEMENTED FOR OTHER SYSTEMS
+#
+#
+
+.global cpe2initSig
+.extern cpe2exit
+.extern void_pageFaultHandler_u64_u64_u64
+
+/*
+ * New architectures should not define the obsolete
+ *	SA_RESTORER	0x04000000
+ */
+.set SA_NOCLDSTOP,	    0x00000001
+.set SA_NOCLDWAIT,	    0x00000002
+.set SA_SIGINFO,	    0x00000004
+.set SA_UNSUPPORTED,    0x00000400
+.set SA_EXPOSE_TAGBITS,	0x00000800
+.set SA_ONSTACK,        0x08000000
+.set SA_RESTART,        0x10000000
+.set SA_NODEFER,        0x40000000
+.set SA_RESETHAND,	    0x80000000
+
+.set SA_SIZE, 32
+
+.data
+# example:
+#cpe2_sigaction_SIGSEGV:
+#    .quad  sighandler_sigsegv  # sa_handler
+#    .int   0x04000000 | SA_SIGINFO # sa_flags
+#    .int   0               # padding
+#    .quad  cpe2sa_restorer # sa_restorer
+#    .quad  0               # sa_mask
+.global cpe2sigHandlerTable
+cpe2sigHandlerTable:
+    # space for 20 signal handlers
+    .space SA_SIZE*20
+    # (cpe2sigHandlerTable)+(0x00*SA_SIZE): invalid handler
+    # (cpe2sigHandlerTable)+(0x01*SA_SIZE): sighup (1)
+    # (cpe2sigHandlerTable)+(0x02*SA_SIZE): sigint (2)
+    # (cpe2sigHandlerTable)+(0x03*SA_SIZE): sigquit (3)
+    # (cpe2sigHandlerTable)+(0x04*SA_SIZE): sigill (4)
+    # (cpe2sigHandlerTable)+(0x05*SA_SIZE): sigtrap (5)
+    # (cpe2sigHandlerTable)+(0x06*SA_SIZE): sigabrt (6)
+    # (cpe2sigHandlerTable)+(0x07*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x08*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x09*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x0A*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x0B*SA_SIZE): sigsegv (11)
+    # (cpe2sigHandlerTable)+(0x0C*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x0D*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x0E*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x0F*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x10*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x11*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x12*SA_SIZE): undefined
+    # (cpe2sigHandlerTable)+(0x13*SA_SIZE): undefined
+.bss
+cpe2sa_old:
+    .space  32
+
+.text
+cpe2sa_restorer:
+    mov     $15, %eax       # SYS_sigreturn
+    syscall
+
+cpe2SetFaultHandler:
+    # install signal handler
+    # rdi: sa_signo
+    # esi: sa_flags
+    # rdx: sa_handler
+    mov %rdx, %r8 # get rdx out the way (gets reset by mul)
+    mov $SA_SIZE, %rax
+    mul %rdi
+    add $cpe2sigHandlerTable, %rax
+    # %rax is now address of sigaction for signo
+    movq %r8,                   0x00(%rax) # 64-bit sa_handler
+    mov  %esi,                  0x08(%rax) # 32-bit sa_flags
+    lea  cpe2sa_restorer(%rip), %r8
+    movq %r8,                   0x10(%rax) # sa_restorer (called when handler returns)
+    movq $0,                    0x18(%rax) # sa_mask
+    # prepare for sys_rt_sigaction call
+    # %rdi is already loaded with signo
+    mov %rax, %rsi
+    lea cpe2sa_old(%rip), %rdx
+    mov $8, %r10 # sizeof(sigset_t) (sa_mask size)
+    mov $13, %rax # sys_rt_sigaction
+    syscall
+    ret
+
+cpe2initSig:
+    //initiate user-space default signal handlers
+    mov $11, %rdi
+    mov $0x04000000 | SA_SIGINFO, %esi
+    mov $void_pageFaultHandler_u64_u64_u64, %rdx
+    call cpe2SetFaultHandler
+    //epilouge
+    ret

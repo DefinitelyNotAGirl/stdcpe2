@@ -1,0 +1,77 @@
+/*
+ * Created Date: Saturday September 30th 2023
+ * Author: Lilith
+ * -----
+ * Last Modified: Saturday September 30th 2023 11:26:48 pm
+ * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * -----
+ * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+#pragma once
+
+nodoc primitivePRINTCHAR void stdout(u64 c);
+nodoc primitivePRINTCHAR void stdout(char c);
+nodoc primitivePRINTSTR void stdout(char* str);
+
+//namespace std:
+nodoc export class __fd extends primitive64;
+nodoc export class format extends primitive64;
+extern __fd cout;
+extern __fd out ;
+extern __fd cerr;
+extern __fd err ;
+extern format num;
+extern format dec;
+extern format hex;
+extern format bin;
+extern format oct;
+static private u64 size;
+constexpr char endl = 0xa;//line feed character
+
+nodoc primitiveAssign primitiveInPlace void operator=(__fd,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(__fd,__fd);
+nodoc primitiveAssign primitiveInPlace void operator=(format,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(format,format);
+
+nodoc primitiveGreaterEqual bool operator>=(format,u64);
+nodoc primitiveLessEqual bool operator<=(format,u64);
+nodoc primitiveLessEqual bool operator<=(u64,format);
+
+nodoc primitiveEqual bool operator==(format,format);
+
+nodoc ABI-SystemVamd64 u64 write(__fd fd,u64 addr,u64 size);
+nodoc mangling-c+=2 ABI-SystemVamd64 u64 write(__fd fd,char* addr,u64 size);
+
+nodoc __fd operator<<(__fd desc,char* str);
+nodoc __fd operator<<(__fd desc,char c);
+nodoc __fd operator<<(__fd desc,u64 n);
+nodoc __fd operator<<(__fd desc,i64 n);
+nodoc __fd operator<<(__fd desc,u32 n);
+nodoc __fd operator<<(__fd desc,i32 n);
+nodoc __fd operator<<(__fd desc,u16 n);
+nodoc __fd operator<<(__fd desc,i16 n);
+nodoc __fd operator<<(__fd desc,u8 n);
+nodoc __fd operator<<(__fd desc,i8 n);
+nodoc __fd operator<<(__fd desc,f64 n);
+nodoc __fd operator<<(__fd desc,f32 n);
+nodoc __fd operator<<(__fd desc,format f);

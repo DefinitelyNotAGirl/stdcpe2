@@ -1,0 +1,60 @@
+// c2o
+// @syntax gas
+// @file src/pageFaultHandler.c2
+
+.extern u64_NULL
+.extern u64_nullptr
+.extern bool_false
+.extern bool_true
+.extern charP8_cpuVendor
+.extern global.std.__fd_cout
+.extern global.std.__fd_out
+.extern global.std.__fd_cerr
+.extern global.std.__fd_err
+.extern global.std.format_num
+.extern global.std.format_dec
+.extern global.std.format_hex
+.extern global.std.format_bin
+.extern global.std.format_oct
+.data
+.section .rodata
+.bss
+.text
+	.global void_pageFaultHandler_u64_u64_u64
+void_pageFaultHandler_u64_u64_u64:
+	sub $64, %rsp
+	mov %rsi, %r8
+	mov 16(%r8), %r9
+	# 
+	cmp $0,%r9
+	je void_pageFaultHandler_u64_u64_u64.boolRetConditional0
+	clc
+	void_pageFaultHandler_u64_u64_u64.boolRetConditional0.reentry:
+	jc void_pageFaultHandler_u64_u64_u64.if0
+	# 
+	void_pageFaultHandler_u64_u64_u64.conditional1.reentry:
+	mov %r9, %r10
+	mov %rdx, 0(%rsp)
+	mov %rsi, 8(%rsp)
+	mov %rdi, 16(%rsp)
+	mov %r8, 24(%rsp)
+	mov %r9, 32(%rsp)
+	mov %r10, 40(%rsp)
+	mov %r11, 48(%rsp)
+	call cpe2exit
+	mov 0(%rsp), %rdx
+	mov 8(%rsp), %rsi
+	mov 16(%rsp), %rdi
+	mov 24(%rsp), %r8
+	mov 32(%rsp), %r9
+	mov 40(%rsp), %r10
+	mov 48(%rsp), %r11
+	void_pageFaultHandler_u64_u64_u64.epilogue:
+	add $64, %rsp
+	ret
+	void_pageFaultHandler_u64_u64_u64.boolRetConditional0:
+		stc
+		jmp void_pageFaultHandler_u64_u64_u64.boolRetConditional0.reentry
+	void_pageFaultHandler_u64_u64_u64.if0:
+		jmp void_pageFaultHandler_u64_u64_u64.conditional1.reentry
+
