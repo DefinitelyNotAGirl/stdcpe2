@@ -29,10 +29,6 @@
  */
 #pragma once
 
-nodoc primitivePRINTCHAR void stdout(u64 c);
-nodoc primitivePRINTCHAR void stdout(char c);
-nodoc primitivePRINTSTR void stdout(char* str);
-
 //namespace std:
 nodoc export class __fd extends primitive64;
 nodoc export class format extends primitive64;
@@ -45,12 +41,12 @@ extern format dec;
 extern format hex;
 extern format bin;
 extern format oct;
-static private u64 size;
-constexpr char endl = 0xa;//line feed character
+//extern u64 size;
+constexpr char endl = 0xA;//line feed character
 
-nodoc primitiveAssign primitiveInPlace void operator=(__fd,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(__fd,u64);
 nodoc primitiveAssign primitiveInPlace void operator=(__fd,__fd);
-nodoc primitiveAssign primitiveInPlace void operator=(format,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(format,u64);
 nodoc primitiveAssign primitiveInPlace void operator=(format,format);
 
 nodoc primitiveGreaterEqual bool operator>=(format,u64);
@@ -59,8 +55,8 @@ nodoc primitiveLessEqual bool operator<=(u64,format);
 
 nodoc primitiveEqual bool operator==(format,format);
 
-nodoc ABI-SystemVamd64 u64 write(__fd fd,u64 addr,u64 size);
-nodoc mangling-c+=2 ABI-SystemVamd64 u64 write(__fd fd,char* addr,u64 size);
+nodoc u64 write(__fd fd,u64 addr,u64 size);
+nodoc u64 write(__fd fd,char* addr,u64 size);
 
 nodoc __fd operator<<(__fd desc,char* str);
 nodoc __fd operator<<(__fd desc,char c);

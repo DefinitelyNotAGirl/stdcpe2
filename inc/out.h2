@@ -33,7 +33,7 @@
 
 nodoc export class stream extends primitive64;
 
-nodoc primitiveAssign primitiveInPlace void operator=(stream,__defuint);
+nodoc primitiveAssign primitiveInPlace void operator=(stream,u64);
 nodoc primitiveAssign primitiveInPlace void operator=(stream,stream);
 
 nodoc primitiveEqual bool operator==(stream,stream);
@@ -56,4 +56,4 @@ nodoc stream operator<<(stream __stream,i8 n);
 nodoc stream operator<<(stream __stream,f64 n);
 nodoc stream operator<<(stream __stream,f32 n);
 nodoc stream operator<<(stream __stream,format f);
-nodoc stream operator<<(stream __stream,__defptr ptr);
+nodoc stream operator<<(stream __stream,ptr_t ptr);

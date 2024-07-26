@@ -30,6 +30,7 @@
 
 #include <out>
 #include <cstring>
+#include <lang>
 
 @desc write informational output to this stream
 stream info    = 0x1001;
@@ -39,7 +40,7 @@ stream warning = 0x1002;
 stream error   = 0x1003;
 
 @desc the id of the stream that was last written to
-stream lastWrittenStream = 0x0000;
+stream lastWrittenStream = NULL;
 
 char* shellcolor_error = `\1b[31m`;
 char* shellcolor_warning = `\1b[34m`;
@@ -80,7 +81,7 @@ nodoc u64 printStreamPrefix(stream __stream):
 
 @desc print a null-terminated string
 @return returns __stream
-nodoc stream operator<<(stream __stream,char* str):
+nodoc stream operator<<(stream __stream, char* str):
     printStreamPrefix(__stream);
     if(__stream == info):
         out << str;

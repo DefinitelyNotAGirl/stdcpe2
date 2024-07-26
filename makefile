@@ -21,7 +21,7 @@ DEPFILES_c2_cp2=$(patsubst src/%.cp2,build/%.d,$(SOURCE_c2_cp2))
 
 C2ARGS=
 ASARGS=
-
+c2syn=Intel
 all: stdlib
 
 build/%.o: src/%.i86
@@ -31,10 +31,10 @@ build/%.o: src/%.a86
 	@$(AS) $(ASARGS) --gstabs -MD -c -o $@ $<
 	$(info  	$(AS)	$<)
 build/%.o: src/%.c2 $(c2)
-	@$(c2) $(C2ARGS) -MD -Bbuild -Ddocumentation -Iinc --fno-libc -S -c -NOD $<
+	@$(c2) $(C2ARGS) -MD -Bbuild -Ddocumentation --msyntax=$(c2syn) --fno-stdlib -Iinc --fno-libc -S --msyntax=$(c2syn) -c -NOD -o $@ $<
 	$(info  	$(c2)	$<)
 build/%.o: src/%.cp2 $(c2)
-	@$(c2) $(C2ARGS) -MD -Bbuild -Ddocumentation -Iinc --fno-libc -S -c $<
+	@$(c2) $(C2ARGS) -MD -Bbuild -Ddocumentation --msyntax=$(c2syn) --fno-stdlib -Iinc --fno-libc -S --msyntax=$(c2syn) -c -NOD -o $@ $<
 	$(info  	$(c2)	$<)
 clean:
 	@-rm -r build/*.o
@@ -45,6 +45,14 @@ clean:
 	@-rm -r build/$(STARTDIR)/*.d
 	$(info  	DELETE	build/*.d)
 	$(info  	DELETE	build/$(STARTDIR)/*.d)
+	@-rm -r build/*.i86
+	@-rm -r build/$(STARTDIR)/*.i86
+	$(info  	DELETE	build/*.i86)
+	$(info  	DELETE	build/$(STARTDIR)/*.i86)
+	@-rm -r build/*.a86
+	@-rm -r build/$(STARTDIR)/*.a86
+	$(info  	DELETE	build/*.a86)
+	$(info  	DELETE	build/$(STARTDIR)/*.a86)
 
 stdlib:  $(OBJECTS_assembly_i86) $(OBJECTS_assembly_a86) $(OBJECTS_c2_cp2) $(OBJECTS_c2_c2)
 	@$(AR) r libcpe2.a $(OBJECTS_assembly_i86) $(OBJECTS_assembly_a86) $(OBJECTS_c2_cp2) $(OBJECTS_c2_c2)

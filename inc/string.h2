@@ -32,7 +32,7 @@
 #include <list>
 
 namespace std:
-    export iteratable class string : list<char>:
+    class string : list<char>:
         public bool startsWith(string& str);
         public bool endsWith(string& str);
         public bool contains(string& str);

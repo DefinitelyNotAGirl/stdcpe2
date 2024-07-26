@@ -31,4 +31,7 @@
 *.out
 *.app
 
+*.temp
+*.temp_svr
+
 -c

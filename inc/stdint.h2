@@ -1,11 +1,11 @@
-/**
+/*
  * Created Date: Sunday August 27th 2023
  * Author: Lilith
  * -----
- * Last Modified: Sunday August 27th 2023 3:06:31 pm
- * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * Last Modified: Thu Jul 18 2024
+ * Modified By: Lilith
  * -----
- * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
+ * Copyright (c) 2023-2024 DefinitelyNotAGirl@github
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,37 +26,21 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- */
+*/
 #pragma once
 
-defaultFloat nodoc export class f64 extends primitiveFloat64;
-defaultSignedInt nodoc export class i64 extends primitive64;
-defaultUnsignedInt nodoc export class u64 extends primitive64;
-defaultChar nodoc class char extends primitive8;
-defaultWchar nodoc class wchar extends primitive16;
-defaultBool nodoc export class bool extends primitive8;
-defaultPointer nodoc export class ptr_t extends primitive64;
-
-nodoc class void extends primitive0;
-#autodecl integer void 0 nodoc
-
-nodoc export class f32 extends primitiveFloat32;
-
-#autodecl integer ptr_t 8 nodoc
-nodoc primitiveInPlace primitiveAssign void operator=(u64,__defptr);
-#autodecl integer i64 8 nodoc
 #autodecl integer u64 8 nodoc
-nodoc export class u32 extends primitive32;
+#autodecl integer ptr_t 8 nodoc
+primitiveAssign primitiveInPlace void operator=(u64,ptr_t);
+#autodecl integer i64 8 nodoc
 #autodecl integer u32 4 nodoc
-nodoc export class i32 extends primitive32;
+class i32 extends primitive32;
 #autodecl integer i32 4 nodoc
-nodoc export class u16 extends primitive16;
 #autodecl integer u16 2 nodoc
-nodoc export class i16 extends primitive16;
+class i16 extends primitive16;
 #autodecl integer i16 2 nodoc
-nodoc export class u8 extends primitive8;
 #autodecl integer u8 1 nodoc
-nodoc export class i8 extends primitive8;
+class i8 extends primitive8;
 #autodecl integer i8 1 nodoc
 #autodecl integer bool 1 nodoc
 
@@ -72,10 +56,10 @@ nodoc primitiveEqual bool operator==(u64,ptr_t);
 //char
 //
 //
-nodoc primitiveInPlace primitiveAssign void operator=(char,char);
-nodoc primitiveInPlace primitiveAssign void operator=(char,u64);
+nodoc primitiveAssign primitiveInPlace void operator=(char,char);
+nodoc primitiveAssign primitiveInPlace void operator=(char,u64);
 
-nodoc primitiveInPlace primitiveAdd void operator+=(u64,char*);
+nodoc primitiveAdd primitiveInPlace void operator+=(u64,char*);
 
 nodoc primitiveNotEqual bool operator!=(char,char);
 nodoc primitiveNotEqual bool operator!=(char,u64);

@@ -6,7 +6,7 @@
  * Modified By: Lilith (definitelynotagirl115169@gmail.com)
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -14,10 +14,10 @@
  * modify, merge, publish, distribute, sublicense, and/or sell copies
  * of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,33 +29,21 @@
  */
 #pragma once
 
-/**
-    @desc allocates itemCount*size bytes of memory, initializes the memory to 0 and returns the address
-*/
-__defptr calloc(u64 itemCount, u64 size);
+@desc allocates itemCount*size bytes of memory, initializes the memory to 0 and returns the address
+ptr_t calloc(u64 itemCount, u64 size);
 
-/**
-    @desc allocates size bytes of memory, zeros out the allocated space and returns the address
-*/
-__defptr zalloc(u64 size);
+@desc allocates size bytes of memory, zeros out the allocated space and returns the address
+ptr_t zalloc(u64 size);
 
-/**
-    @desc allocates size bytes of memory and returns the address
-*/
-SYMBOL-cpe2malloc __defptr malloc(u64 size);
+@desc allocates size bytes of memory and returns the address
+SYMBOL-cpe2malloc ptr_t malloc(u64 size);
 
-/**
-    @desc free's the memory at the address ptr
-*/
-SYMBOL-cpe2free void free(__defptr ptr);
+@desc free's the memory at the address ptr
+SYMBOL-cpe2free void free(ptr_t ptr);
 
-/**
-    @desc same as "u64 newBuffer = malloc(newSize);memcpy(newBuffer,ptr,oldSize);", newBuffer may or may not be the same as ptr,
-    if realloc moves the buffer it will automatically free the old buffer
-*/
-__defptr realloc(__defptr ptr, u64 newSize);
+@desc same as "u64 newBuffer = malloc(newSize);memcpy(newBuffer,ptr,oldSize);", newBuffer may or may not be the same as ptr,
+@desc if realloc moves the buffer it will automatically free the old buffer
+ptr_t realloc(ptr_t ptr, u64 newSize);
 
-/**
-    @desc copies size number of bytes from src to dst
-*/
-void memcpy(__defptr dst, __defptr src, u64 size);
+@desc copies size number of bytes from src to dst
+void memcpy(ptr_t dst, ptr_t src, u64 size);

@@ -28,4 +28,4 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-SYMBOL-cpe2SetFaultHandler void setFaultHandler(__defuint sig, __defptr function);
+SYMBOL-cpe2SetFaultHandler void setFaultHandler(u64 sig, ptr_t function);

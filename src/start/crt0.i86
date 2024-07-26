@@ -2,8 +2,8 @@
  * Created Date: Monday October 2nd 2023
  * Author: Lilith
  * -----
- * Last Modified: Monday October 2nd 2023 6:30:11 am
- * Modified By: Lilith (definitelynotagirl115169@gmail.com)
+ * Last Modified: Tue Jul 02 2024
+ * Modified By: Lilith
  * -----
  * Copyright (c) 2023-2023 DefinitelyNotAGirl@github
  * 
@@ -28,6 +28,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+.intel_syntax noprefix
+
 .extern cpe2main
 .extern cpe2initSig
 .extern cpe2exit
@@ -42,35 +44,25 @@
 
 .extern __fd_out
 
+.extern ____cpe2.threadDataSize
+
 .set printSTR, __fd_operatorLESSERLESSER___fd_charP8
 .set printCHAR, __fd_operatorLESSERLESSER___fd_char
 .set printHEX, __fd_operatorLESSERLESSER___fd_u64
 .set UTHS, charP8_UTHS_u64
 
 .data
-__str1:
-    .string "bytes not freed before exit: "
 
 .text
 .global _start
 _start:
+	# initate r15
+	mov r15, rsp
+	sub rsp, ____cpe2.threadDataSize
+	# init	
     call cpe2initSig # initiate signal handlers
     call cpe2mallocInit # initiate malloc
     call cpe2main # call main
-    //debug exit output
-    //text for display
-    mov __fd_out, %rdi
-    mov $__str1, %rsi
-    call printSTR
-    //number of bytes
-    call cpe2malloc_getUsed
-    mov __fd_out, %rdi
-    mov %rax, %rsi
-    call printHEX
-    //endl
-    mov __fd_out, %rdi
-    mov $10, %rsi
-    call printCHAR
-    //exit with code 0, ignore return code of main
-    xor %rdi, %rdi
+    # exit with code 0, ignore return code of main
+    xor rdi, rdi
     call cpe2exit
